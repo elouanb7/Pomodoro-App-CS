@@ -1,11 +1,12 @@
 ﻿@page "/"
 @using System.Threading.Tasks
+@using app.Models
 
 <Toasts class="p-3" Messages="_messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 
 <h1>🍅 Pomodoro Timer</h1>
 
-@if (!_pomodoro.TimerEnabled)
+@if (_pomodoro.TimerNull)
 {
 <p>Choose the program needed:
     <input type="radio" id="shortProgram" name="program" checked="@(_pomodoro.Program == Pomodoro.Programs.Short)" value="short" @onchange="ChangeProgram"/>
@@ -23,7 +24,7 @@
 }
 
 <p>
-    @if (!_pomodoro.TimeRemaining.Equals(TimeSpan.Zero))
+    @if (!_pomodoro.TimerNull)
     {
     @if (_pomodoro.Step == Pomodoro.Steps.Break)
     {
@@ -36,16 +37,16 @@
     @:Time remaining: @_pomodoro.TimeRemaining.Minutes:@_pomodoro.TimeRemaining.Seconds
     }
 </p>
-@switch (_pomodoro.TimeRemaining.Equals(TimeSpan.Zero) ? false : _pomodoro.TimerEnabled)
+@switch (_pomodoro.TimerEnabled)
 {
 case true:
 <button @onclick="Pause">Pause</button>
 break;
-case false when _pomodoro.TimeRemaining != TimeSpan.FromMinutes(_pomodoro.WorkDuration):
+case false when (_pomodoro.TimeRemaining != TimeSpan.FromMinutes(_pomodoro.WorkDuration)) && !_pomodoro.TimerNull:
 <button @onclick="Unpause">Unpause</button>
 break;
 }
-@if (!_pomodoro.TimeRemaining.Equals(TimeSpan.Zero))
+@if (!_pomodoro.TimerNull)
 {
 <button @onclick="StopTimer">Reset</button>
 }
