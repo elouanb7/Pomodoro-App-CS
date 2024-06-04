@@ -1,0 +1,1 @@
+C:\dev\c#\Pomodoro-App-CS\.sonarqube\out\0
