@@ -1,0 +1,182 @@
+@page "/"
+@using System.Threading.Tasks
+<Toasts class="p-3" Messages="_messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
+
+<h1>🍅 Pomodoro Timer</h1>
+
+@if (_timer == null)
+{
+    <p>Choose the program needed : <input type="radio" id="shortProgram" name="program" checked="@(_program==Programs.Short)" value="short" @onchange="ChangeProgram"/> <label for="shortProgram">Short</label>
+        <input type="radio" id="longProgram" name="program" checked="@(_program==Programs.Long)" value="long" @onchange="ChangeProgram" /> <label for="longProgram">Long</label>
+    </p>
+    <p>
+        Work Time will be : @_workDuration min
+        <br>
+        Break Time will be : @_breakDuration min
+        <br>
+        <button @onclick="StartTimer">Start</button>
+    </p>
+}
+
+@*<p>
+    <input type="number" @bind="@_workDuration" />
+    <button @onclick="StartTimer">Start Work</button>
+
+    <input type="number" @bind="@_breakDuration" />
+    <button @onclick="StartBreak">Start Break</button>
+</p>*@
+
+<p>
+    
+    @if (_timer != null)
+    {
+        @if (_step == Steps.Break)
+        {
+            @:🍵 Break !     
+        }
+        else
+        {
+            @:👷🏻‍♂️ Work !   
+        }
+        @:Time remaining: @_timeRemaining.Minutes:@_timeRemaining.Seconds
+    }
+</p>
+@switch (_timer?.Enabled)
+{
+    case true:
+        <button @onclick="Pause">Pause</button>
+        break;
+    case false when _timeRemaining != TimeSpan.FromMinutes(_workDuration):
+        <button @onclick="Unpause">Unpause</button>
+        break;
+}
+@if (_timer != null)
+{
+    <button @onclick="StopTimer">Reset</button>
+}
+
+
+@code {
+    [Inject] protected ToastService ToastService { get; set; } = default!;
+    List<ToastMessage> _messages = new List<ToastMessage>();
+    private int _workDuration = 25; // default work duration in minutes
+    private int _breakDuration = 5; // default break duration in minutes
+    private TimeSpan _timeRemaining;
+    private bool _longProgram;
+    private System.Timers.Timer? _timer;
+    private Programs _program = Programs.Short;
+    private Steps _step = Steps.Work;
+    private enum Programs
+    {
+        Short,
+        Long
+    }
+    private enum Steps
+    {
+        Work,
+        Break
+    }
+    
+    private void StartTimer()
+    {
+        StopTimer();
+        _step = Steps.Work;
+        _timeRemaining = TimeSpan.FromMinutes(_workDuration);
+        _timer = new System.Timers.Timer(1000);
+        _timer.Elapsed += TimerTick;
+        _timer.Start();
+    }
+
+    private void StartBreak()
+    {
+        StopTimer();
+        _step = Steps.Break;
+        _timeRemaining = TimeSpan.FromMinutes(_breakDuration);
+        _timer = new System.Timers.Timer(1000);
+        _timer.Elapsed += TimerTick;
+        _timer.Start();
+    }
+    
+    private void Pause()
+    {
+        _timer?.Stop();
+    }
+    
+    private void Unpause()
+    {
+        _timer?.Start();
+    }
+    
+    private void StopTimer()
+    {
+        if (_timer == null) return;
+        _timer.Stop();
+        _timer.Dispose();
+        _timer = null;
+    }
+
+    private void TimerTick(object sender, EventArgs e)
+    {
+        if (_timeRemaining.TotalSeconds <= 0)
+        {
+            // Timer finished
+            StopTimer();
+            if (_step == Steps.Work)
+            {
+                ShowBreakMessage(ToastType.Info);
+                /*
+                ToastService.Notify(new ToastMessage(ToastType.Info, $"Work time elapsed ! Break time starting."));
+                */
+                StartBreak();
+            }
+            else
+            {
+                /*
+                ToastService.Notify(new ToastMessage(ToastType.Info, $"Break time elapsed ! Please start work session manually"));
+                */
+                ShowWorkMessage(ToastType.Info);
+                _step = Steps.Work;
+            }
+        }
+        else
+        {
+            _timeRemaining = _timeRemaining.Subtract(TimeSpan.FromSeconds(1));
+            InvokeAsync(() => StateHasChanged());
+        }
+    }
+
+    private void ChangeProgram()
+    {
+        _longProgram = !_longProgram;
+        if (_longProgram)
+        {
+            _program = Programs.Long;
+            _workDuration = 45;
+            _breakDuration = 15;
+        }
+        else
+        {
+            _program = Programs.Short;
+            _workDuration = 15;
+            _breakDuration = 5;
+        }
+    }
+    
+    private void ShowBreakMessage(ToastType toastType) => _messages.Add(CreateBreakToastMessage(toastType));
+    private void ShowWorkMessage(ToastType toastType) => _messages.Add(CreateWorkToastMessage(toastType));
+
+    private ToastMessage CreateBreakToastMessage(ToastType toastType)
+        => new ToastMessage
+        {
+            Type = toastType,
+            Message = $"Work time elapsed ! Break time starting.",
+        };
+    
+    private ToastMessage CreateWorkToastMessage(ToastType toastType)
+        => new ToastMessage
+        {
+            Type = toastType,
+            Message = $"Break time elapsed ! Please start work session manually",
+        };
+    
+}

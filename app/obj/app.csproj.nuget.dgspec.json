@@ -37,6 +37,16 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
+          "dependencies": {
+            "Blazor.Bootstrap": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "CsvHelper": {
+              "target": "Package",
+              "version": "[32.0.3, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

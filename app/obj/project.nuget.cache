@@ -1,8 +1,25 @@
 {
   "version": 2,
-  "dgSpecHash": "HpL4zo35MEyaOiXcofjjFEL2ucTz3TMmZFjUpfX5cRgpom6uX6YXbdZpNkJ52oezyxllnHYf46ZXAZ+2SexszA==",
+  "dgSpecHash": "Sy1sC2kFeeBZL2biKn4G/XNxCSqqWGdkz93BJwqI0Fh255kGMVxhyKTBeSh6KvPleJwvVndPkPCl8KJ1g/64NQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Eloua\\code\\PomodoroApp\\app\\app.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Eloua\\.nuget\\packages\\blazor.bootstrap\\2.2.0\\blazor.bootstrap.2.2.0.nupkg.sha512",
+    "C:\\Users\\Eloua\\.nuget\\packages\\csvhelper\\32.0.3\\csvhelper.32.0.3.nupkg.sha512",
+    "C:\\Users\\Eloua\\.nuget\\packages\\microsoft.aspnetcore.authorization\\6.0.26\\microsoft.aspnetcore.authorization.6.0.26.nupkg.sha512",
+    "C:\\Users\\Eloua\\.nuget\\packages\\microsoft.aspnetcore.components\\6.0.26\\microsoft.aspnetcore.components.6.0.26.nupkg.sha512",
+    "C:\\Users\\Eloua\\.nuget\\packages\\microsoft.aspnetcore.components.analyzers\\6.0.26\\microsoft.aspnetcore.components.analyzers.6.0.26.nupkg.sha512",
+    "C:\\Users\\Eloua\\.nuget\\packages\\microsoft.aspnetcore.components.forms\\6.0.26\\microsoft.aspnetcore.components.forms.6.0.26.nupkg.sha512",
+    "C:\\Users\\Eloua\\.nuget\\packages\\microsoft.aspnetcore.components.web\\6.0.26\\microsoft.aspnetcore.components.web.6.0.26.nupkg.sha512",
+    "C:\\Users\\Eloua\\.nuget\\packages\\microsoft.aspnetcore.metadata\\6.0.26\\microsoft.aspnetcore.metadata.6.0.26.nupkg.sha512",
+    "C:\\Users\\Eloua\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\6.0.1\\microsoft.extensions.dependencyinjection.6.0.1.nupkg.sha512",
+    "C:\\Users\\Eloua\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\6.0.0\\microsoft.extensions.dependencyinjection.abstractions.6.0.0.nupkg.sha512",
+    "C:\\Users\\Eloua\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\6.0.4\\microsoft.extensions.logging.abstractions.6.0.4.nupkg.sha512",
+    "C:\\Users\\Eloua\\.nuget\\packages\\microsoft.extensions.options\\6.0.0\\microsoft.extensions.options.6.0.0.nupkg.sha512",
+    "C:\\Users\\Eloua\\.nuget\\packages\\microsoft.extensions.primitives\\6.0.0\\microsoft.extensions.primitives.6.0.0.nupkg.sha512",
+    "C:\\Users\\Eloua\\.nuget\\packages\\microsoft.jsinterop\\6.0.26\\microsoft.jsinterop.6.0.26.nupkg.sha512",
+    "C:\\Users\\Eloua\\.nuget\\packages\\system.io.pipelines\\6.0.3\\system.io.pipelines.6.0.3.nupkg.sha512",
+    "C:\\Users\\Eloua\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+  ],
   "logs": []
 }

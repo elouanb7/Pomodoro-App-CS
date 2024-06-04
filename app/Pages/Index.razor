@@ -1,9 +1,98 @@
 ﻿@page "/"
+@using System.Threading.Tasks
 
-<PageTitle>Index</PageTitle>
+<Toasts class="p-3" Messages="_messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 
-<h1>Hello, world!</h1>
+<h1>🍅 Pomodoro Timer</h1>
 
-Welcome to your new app.
+@if (!_pomodoro.TimerEnabled)
+{
+<p>Choose the program needed:
+    <input type="radio" id="shortProgram" name="program" checked="@(_pomodoro.Program == Pomodoro.Programs.Short)" value="short" @onchange="ChangeProgram"/>
+    <label for="shortProgram">Short</label>
+    <input type="radio" id="longProgram" name="program" checked="@(_pomodoro.Program == Pomodoro.Programs.Long)" value="long" @onchange="ChangeProgram" />
+    <label for="longProgram">Long</label>
+</p>
+<p>
+    Work Time will be: @_pomodoro.WorkDuration min
+    <br>
+    Break Time will be: @_pomodoro.BreakDuration min
+    <br>
+    <button @onclick="StartTimer">Start</button>
+</p>
+}
 
-<SurveyPrompt Title="How is Blazor working for you?"/>
+<p>
+    @if (!_pomodoro.TimeRemaining.Equals(TimeSpan.Zero))
+    {
+    @if (_pomodoro.Step == Pomodoro.Steps.Break)
+    {
+    @:🍵 Break!
+    }
+    else
+    {
+    @:👷🏻‍♂️ Work!
+    }
+    @:Time remaining: @_pomodoro.TimeRemaining.Minutes:@_pomodoro.TimeRemaining.Seconds
+    }
+</p>
+@switch (_pomodoro.TimeRemaining.Equals(TimeSpan.Zero) ? false : _pomodoro.TimerEnabled)
+{
+case true:
+<button @onclick="Pause">Pause</button>
+break;
+case false when _pomodoro.TimeRemaining != TimeSpan.FromMinutes(_pomodoro.WorkDuration):
+<button @onclick="Unpause">Unpause</button>
+break;
+}
+@if (!_pomodoro.TimeRemaining.Equals(TimeSpan.Zero))
+{
+<button @onclick="StopTimer">Reset</button>
+}
+
+@code {
+[Inject] protected ToastService ToastService { get; set; } = default!;
+List<ToastMessage> _messages = new List<ToastMessage>();
+private Pomodoro _pomodoro = new Pomodoro();
+
+protected override void OnInitialized()
+{
+_pomodoro.OnTimerTick += () => InvokeAsync(StateHasChanged);
+_pomodoro.OnNotify += (message) => ShowToast(message);
+}
+
+private void StartTimer()
+{
+_pomodoro.StartTimer();
+}
+
+private void Pause()
+{
+_pomodoro.Pause();
+}
+
+private void Unpause()
+{
+_pomodoro.Unpause();
+}
+
+private void StopTimer()
+{
+_pomodoro.StopTimer();
+}
+
+private void ChangeProgram()
+{
+_pomodoro.ChangeProgram();
+}
+
+private void ShowToast(string message)
+{
+var toastMessage = new ToastMessage
+{
+Type = ToastType.Info,
+Message = message
+};
+_messages.Add(toastMessage);
+}
+}
